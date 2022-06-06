@@ -26,7 +26,7 @@ class Product(models.Model):
 class Socket_CPU(models.Model):
       name_socket= models.CharField(max_length=50,unique=True)
       def __str__(self) -> str:
-            return self.name_manufacturer
+            return self.name_socket
 
 class Chipset(models.Model):
       name_Chipset= models.CharField(max_length=50,unique=True)
