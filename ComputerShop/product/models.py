@@ -1,7 +1,9 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _ 
 
 # Create your models here.
-
+def upload_to(instance, filename):
+      return 'posts/{filename}'.format(filename=filename)
 
 class Manufacturer(models.Model):
       name_manufacturer= models.CharField(max_length=50)
@@ -9,17 +11,32 @@ class Manufacturer(models.Model):
       def __str__(self) -> str:
             return self.name_manufacturer
 
+class Product_Type(models.Model):
+      name_type= models.CharField(max_length=50,unique=True)
+      def __str__(self) -> str:
+            return self.name_type
+
 class Product(models.Model):
       Available_Quantity= models.IntegerField(default=0)
-      # product_type= models.ForeignKey(Product_Type,on_delete=models.CASCADE)
+      product_type= models.ForeignKey(
+            Product_Type,
+            on_delete=models.CASCADE
+      )
       manufacturer= models.ForeignKey(
             Manufacturer,
             on_delete=models.CASCADE
       )
       Warranty_Period= models.IntegerField(blank=True,null=True)
       Origin= models.CharField(blank=True,null=True,max_length=50)
-      src_img= models.TextField(blank=True,default='')
+      # src_img= models.TextField(blank=True,default='')
+      src_img= models.ImageField(
+            _("Image"),
+            upload_to=upload_to,
+            blank=True,null=True
+      )
       price= models.FloatField(blank=True,null=True)
+      def __str__(self) -> str:
+            return (self.product_type.name_type + " "+ str(self.id))
 
 # mainboard 
 
@@ -142,6 +159,22 @@ class VGA(models.Model):
             primary_key=True
       )
       name_vga= models.CharField(max_length=255,unique=True)
+      gpu= models.ForeignKey(
+            GPU,
+            on_delete=models.CASCADE,
+            blank=True,null=True
+      )
+      memory_standard= models.ForeignKey(
+            Memory_Standard,
+            on_delete=models.CASCADE,
+            blank=True,null=True
+      )
+      capacity= models.CharField(max_length=20,blank=True,null=True)
+      oc_mode= models.CharField(max_length=255,blank=True,null=True)
+      gaming_mode= models.CharField(max_length=255,blank=True,null=True)
+      microwave= models.CharField(max_length=20,blank=True,null=True)
+      number_of_processing_units= models.IntegerField(blank=True,null=True)
+      radiators= models.CharField(max_length=255,blank=True,null=True)
       def __str__(self) -> str:
             return self.name_vga
 

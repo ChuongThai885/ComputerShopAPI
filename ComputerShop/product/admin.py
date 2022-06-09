@@ -4,6 +4,7 @@ from product.models import *
 # Register your models here.
 
 
+admin.site.register(Product_Type)
 admin.site.register(Manufacturer)
 admin.site.register(Product)
 # mainboard
