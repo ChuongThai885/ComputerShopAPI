@@ -23,10 +23,12 @@ class Orders(models.Model):
             blank=True,null=True
       )
       delivery_address= models.CharField(max_length=255)
+      total_prices= models.FloatField(default=0)
       payment = models.ForeignKey(
             Payment,
             on_delete=models.CASCADE
       )
+      order_date= models.DateTimeField(blank=True,null=True)
 
 
 class Orders_detail(models.Model):
@@ -40,7 +42,7 @@ class Orders_detail(models.Model):
       )
       number_product= models.IntegerField(default=1)
       price= models.FloatField()
-      discount= models.FloatField()
+      discount= models.FloatField(blank=True,null=True)
       class Meta:
             constraints = [
                   models.UniqueConstraint(
