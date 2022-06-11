@@ -92,7 +92,7 @@ class Mainboard(models.Model):
             on_delete=models.CASCADE,
             blank=True,null=True
       )
-      maximun_ram_slot=models.IntegerField(default=1,blank=True)
+      maximun_ram_slot=models.IntegerField(blank=True,null=True)
       pci= models.CharField(max_length=255,blank=True,null=True)
       back_panel= models.CharField(max_length=255,blank=True,null=True)
       def __str__(self) -> str:

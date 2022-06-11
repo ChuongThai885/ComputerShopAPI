@@ -2,6 +2,80 @@ from rest_framework import serializers
 from product.models import *
 
 
+class MainboardSerializer(serializers.ModelSerializer):
+      id= serializers.SerializerMethodField(read_only=True)
+      src_img= serializers.SerializerMethodField(read_only=True)
+      cpu_support= serializers.SerializerMethodField(read_only=True)
+      socket= serializers.SerializerMethodField(read_only=True)
+      mainboard_form= serializers.SerializerMethodField(read_only=True)
+      chipset= serializers.SerializerMethodField(read_only=True)
+      manufacturer= serializers.SerializerMethodField(read_only=True)
+      prices= serializers.SerializerMethodField(read_only=True)
+
+      class Meta:
+            model= Mainboard
+            fields =(
+                  'id',
+                  'name_mainboard',
+                  'src_img',
+                  'cpu_support',
+                  'manufacturer',
+                  'socket',
+                  'mainboard_form',
+                  'chipset',
+                  'maximun_ram_slot',
+                  'prices',
+            )
+      
+      def get_chipset(self, obj):
+            try:
+                  return obj.chipset.name_Chipset
+            except:
+                  return None
+
+      def get_socket(self, obj):
+            try:
+                  return obj.socket_cpu.name_socket
+            except:
+                  return None
+
+      def get_mainboard_form(self, obj):
+            try:
+                  return obj.mainboard_form.name_form
+            except:
+                  return None
+
+      def get_cpu_support(self, obj):
+            try:
+                  return obj.cpu_support.name_manufacturer
+            except:
+                  return None
+
+      def get_id(self, obj):
+            return obj.product.id
+
+      def get_src_img(self, obj):
+            return get_src(obj.product.src_img) 
+
+      def get_manufacturer(self, obj):
+            try:
+                  return obj.product.manufacturer.name_manufacturer
+            except:
+                  return None
+
+      def get_prices(self,obj):
+            try:
+                  return obj.product.price
+            except:
+                  return None
+
+def get_src(link):
+      try:
+            return '/media/'+ str(link)
+      except:
+            return None
+
+
 class MainboardDetailSerializer(serializers.ModelSerializer):
       chipset= serializers.SerializerMethodField(read_only=True)
       socket= serializers.SerializerMethodField(read_only=True)
@@ -31,11 +105,11 @@ class MainboardDetailSerializer(serializers.ModelSerializer):
             except:
                   return None
 
-      def get_socket(self, obj):
-            try:
-                  return obj.socket_cpu.name_socket
-            except:
-                  return None
+      # def get_socket(self, obj):
+      #       try:
+      #             return obj.socket_cpu.name_socket
+      #       except:
+      #             return None
 
       def get_mainboard_form(self, obj):
             try:

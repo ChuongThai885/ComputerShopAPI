@@ -16,8 +16,19 @@ class getAllProductAPI(APIView):
 class getAllMainboardAPI(APIView):
       def get(self,request):
             list_mainboard= Mainboard.objects.all()
-            data= MainboardDetailSerializer(list_mainboard, many= True)
+            data= MainboardSerializer(list_mainboard, many= True)
             return Response(data.data,status.HTTP_200_OK)
+
+class getMainboardAPI(APIView):
+      def get(self, request, id):
+            data= {}
+            _status = status.HTTP_200_OK
+            try:
+                  data=MainboardDetailSerializer(Mainboard.objects.get(pk=id)).data
+            except:
+                  data["error"]= "id not exists"
+                  _status = status.HTTP_400_BAD_REQUEST
+            return Response(data,_status)
 
 class getAllRadiatorAPI(APIView):
       def get(self,request):
