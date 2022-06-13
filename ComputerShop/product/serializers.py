@@ -68,10 +68,43 @@ class MainboardDetailSerializer(MainboardSerializer):
                   return None
 
 
-class CPUDetailSerializer(serializers.ModelSerializer):
+class CPUSerializer(serializers.ModelSerializer):
       cpu_series= serializers.SerializerMethodField(read_only=True)
       cpu_generation= serializers.SerializerMethodField(read_only=True)
       socket= serializers.SerializerMethodField(read_only=True)
+      
+      class Meta:
+            model= CPU
+            fields= (
+                  'name_cpu',
+                  'cpu_series',
+                  'cpu_generation',
+                  'socket',
+                  'number_of_core',
+                  'number_of_threads',
+                  'tdp',
+            )
+
+      def get_cpu_series(self, obj):
+            try:
+                  return str(obj.cpu_series.manufacturer)+ " "+ obj.cpu_series.name_series
+            except:
+                  return None
+      
+      def get_cpu_generation(self, obj):
+            try:
+                  return str(obj.cpu_series.manufacturer)+ " "+ obj.cpu_generation.name_generation
+            except:
+                  return None
+
+      def get_socket(self, obj):
+            try:
+                  return obj.socket_cpu.name_socket
+            except:
+                  return None
+
+
+class CPUDetailSerializer(CPUSerializer):
 
       class Meta:
             model= CPU
@@ -87,24 +120,6 @@ class CPUDetailSerializer(serializers.ModelSerializer):
                   'cache_cpu',
                   'tdp',
             )
-
-      def get_cpu_series(self, obj):
-            try:
-                  return obj.cpu_series.name_series
-            except:
-                  return None
-      
-      def get_cpu_generation(self, obj):
-            try:
-                  return obj.cpu_generation.name_generation
-            except:
-                  return None
-
-      def get_socket(self, obj):
-            try:
-                  return obj.socket_cpu.name_socket
-            except:
-                  return None
 
 
 class VGADetailSerializer(serializers.ModelSerializer):
@@ -308,7 +323,7 @@ class ProductSerializer(serializers.ModelSerializer):
             if _type=='Mainboard':
                   return MainboardDetailSerializer(obj.mainboard).data
             elif _type== 'CPU':
-                  return None
+                  return CPUSerializer(obj.cpu).data
             elif _type== 'VGA':
                   return None
             elif _type== 'RAM':
@@ -331,7 +346,7 @@ class ProductDetailSerializer(ProductSerializer):
             if _type=='Mainboard':
                   return MainboardDetailSerializer(obj.mainboard).data
             elif _type== 'CPU':
-                  return None
+                  return CPUDetailSerializer(obj.cpu).data
             elif _type== 'VGA':
                   return None
             elif _type== 'RAM':

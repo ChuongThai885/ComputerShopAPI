@@ -7,31 +7,42 @@ from rest_framework import status
 
 # Create your views here.
 
+
+def getAll(product_name):
+      data= {}
+      _status= status.HTTP_200_OK
+      try:
+            if product_name== "Product":
+                  list_items= Product.objects.all()
+            else:
+                  id_type= Product_Type.objects.get(name_type= product_name)
+                  list_items= Product.objects.filter(product_type_id= id_type)
+            data= ProductSerializer(list_items, many= True).data
+      except:
+            data['error']= 'An error has occur, type ' + str(product_name) + ' doesn\'t exist !!'
+            _status = status.HTTP_400_BAD_REQUEST
+      return Response(data, _status)
+
+def getDetail(id_product):
+      data= {}
+      _status= status.HTTP_200_OK
+      list_items= list_items= Product.objects.all()
+      try:
+            val= list_items.get(pk= id_product)
+            data= ProductDetailSerializer(val).data
+      except:
+            data['error']= 'Product with id=' +str(id_product) + ' doesn\'t exist !!'
+            _status = status.HTTP_400_BAD_REQUEST
+      return Response(data, _status)
+
 class getAllProductAPI(APIView):
       def get(self,request):
-            list_product= Product.objects.all()
-            data= ProductSerializer(list_product, many= True)
-            return Response(data.data,status.HTTP_200_OK)
+            return getAll("Product")
 
-class getAllMainboardAPI(APIView):
-      def get(self,request):
-            list_mainboard= Mainboard.objects.all()
-            data= MainboardSerializer(list_mainboard, many= True)
-            return Response(data.data,status.HTTP_200_OK)
+class getAllAPI(APIView):
+      def get(self,request, type):
+            return getAll(type)
 
-class getMainboardAPI(APIView):
+class getProductDetailAPI(APIView):
       def get(self, request, id):
-            data= {}
-            _status = status.HTTP_200_OK
-            try:
-                  data=MainboardDetailSerializer(Mainboard.objects.get(pk=id)).data
-            except:
-                  data["error"]= "id not exists"
-                  _status = status.HTTP_400_BAD_REQUEST
-            return Response(data,_status)
-
-class getAllRadiatorAPI(APIView):
-      def get(self,request):
-            list_radiator= Radiator.objects.all()
-            data= RadiatorDetailSerializer(list_radiator,many= True)
-            return Response(data.data,status.HTTP_200_OK)
+            return getDetail(id)

@@ -101,11 +101,19 @@ class Mainboard(models.Model):
 # CPU 
 
 class CPU_Series(models.Model):
+      manufacturer= models.ForeignKey(
+            Manufacturer,
+            on_delete=models.CASCADE,
+      )
       name_series= models.CharField(unique=True,max_length=50)
       def __str__(self) -> str:
             return self.name_series
 
 class CPU_Generation(models.Model):
+      manufacturer= models.ForeignKey(
+            Manufacturer,
+            on_delete=models.CASCADE,
+      )
       name_generation= models.CharField(unique=True,max_length=50)
       def __str__(self) -> str:
             return self.name_generation
