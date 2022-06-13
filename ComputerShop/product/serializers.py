@@ -122,23 +122,29 @@ class CPUDetailSerializer(CPUSerializer):
             )
 
 
-class VGADetailSerializer(serializers.ModelSerializer):
+class VGASerializer(serializers.ModelSerializer):
+      Chipset_manufacturer= serializers.SerializerMethodField(read_only=True)
       gpu= serializers.SerializerMethodField(read_only=True)
       memory_standard= serializers.SerializerMethodField(read_only=True)
-
+      
       class Meta:
             model= VGA
             fields =(
                   'name_vga',
+                  'Chipset_manufacturer',
                   'gpu',
                   'memory_standard',
                   'capacity',
-                  'oc_mode',
-                  'gaming_mode',
-                  'microwave',
+                  'memory_bus',
                   'number_of_processing_units',
                   'radiators',
-            )
+            ) 
+
+      def get_Chipset_manufacturer(self, obj):
+            try:
+                  return obj.gpu.manufacturer.name_manufacturer
+            except:
+                  return None
 
       def get_gpu(self, obj):
             try:
@@ -153,7 +159,30 @@ class VGADetailSerializer(serializers.ModelSerializer):
                   return None
 
 
-class RAMDetailSerializer(serializers.ModelSerializer):
+class VGADetailSerializer(VGASerializer):
+      capacity= serializers.SerializerMethodField(read_only=True)
+
+      class Meta:
+            model= VGA
+            fields =(
+                  'name_vga',
+                  'gpu',
+                  'capacity',
+                  'oc_mode',
+                  'gaming_mode',
+                  'memory_bus',
+                  'number_of_processing_units',
+                  'radiators',
+            )
+
+      def get_capacity(self, obj):
+            try:
+                  return obj.capacity + " " + obj.memory_standard.name_standard
+            except:
+                  return None
+
+
+class RAMSerializer(serializers.ModelSerializer):
       ram_type= serializers.SerializerMethodField(read_only=True)
 
       class Meta:
@@ -166,12 +195,27 @@ class RAMDetailSerializer(serializers.ModelSerializer):
                   'quantity_in_pack',
                   'rbg',
             )
-      
+
       def get_ram_type(self, obj):
             try:
                   return obj.ram_type.memory_type
             except:
                   return None
+
+
+class RAMDetailSerializer(RAMSerializer):
+
+      class Meta:
+            model= RAM
+            fields =(
+                  'name_ram',
+                  'ram_type',
+                  'capacity',
+                  'speed',
+                  'quantity_in_pack',
+                  'rbg',
+                  'model',
+            )
 
 
 class Hard_DriveDetailSerializer(serializers.ModelSerializer):
@@ -214,20 +258,19 @@ class PSUDetailSerializer(serializers.ModelSerializer):
                   return None
 
 
-class CASE_CoverDetailSerializer(serializers.ModelSerializer):
+class CASE_CoverSerializer(serializers.ModelSerializer):
       mainboard_support= serializers.SerializerMethodField(read_only=True)
       case_type= serializers.SerializerMethodField(read_only=True)
       color= serializers.SerializerMethodField(read_only=True)
-
+      
       class Meta:
             model= CASE_Cover
             fields =(
                   'name_case_cover',
                   'case_type',
+                  'color',
                   'material',
                   'size',
-                  'rgb',
-                  'color',
                   'mainboard_support',
             )
 
@@ -248,6 +291,21 @@ class CASE_CoverDetailSerializer(serializers.ModelSerializer):
                   return obj.color.name_color
             except:
                   return None
+
+
+class CASE_CoverDetailSerializer(CASE_CoverSerializer):
+
+      class Meta:
+            model= CASE_Cover
+            fields =(
+                  'name_case_cover',
+                  'case_type',
+                  'material',
+                  'size',
+                  'rgb',
+                  'color',
+                  'mainboard_support',
+            )
 
 
 class RadiatorSerializer(serializers.ModelSerializer):
@@ -307,8 +365,6 @@ class ProductSerializer(serializers.ModelSerializer):
                   'src_img',
                   'price',
                   'Available_Quantity',
-                  'Warranty_Period',
-                  'Origin',
                   'detail_infor',
             )
 
@@ -325,21 +381,34 @@ class ProductSerializer(serializers.ModelSerializer):
             elif _type== 'CPU':
                   return CPUSerializer(obj.cpu).data
             elif _type== 'VGA':
-                  return None
+                  return VGASerializer(obj.vga).data
             elif _type== 'RAM':
-                  return None
+                  return RAMSerializer(obj.ram).data
             elif _type== 'Hard_Drive':
                   return None
             elif _type== 'PSU':
                   return None
             elif _type== 'CASE_Cover':
-                  return None
+                  return CASE_CoverSerializer(obj.case_cover).data
             elif _type== 'Radiator':
                   return RadiatorSerializer(obj.radiator).data
             else:
                   return None
 
 class ProductDetailSerializer(ProductSerializer):
+      class Meta:
+            model= Product
+            fields =(
+                  'id',
+                  'product_type',
+                  'manufacturer',
+                  'src_img',
+                  'price',
+                  'Available_Quantity',
+                  'Warranty_Period',
+                  'Origin',
+                  'detail_infor',
+            )
 
       def get_detail_infor(self, obj):
             _type= obj.product_type.name_type
@@ -348,15 +417,15 @@ class ProductDetailSerializer(ProductSerializer):
             elif _type== 'CPU':
                   return CPUDetailSerializer(obj.cpu).data
             elif _type== 'VGA':
-                  return None
+                  return VGADetailSerializer(obj.vga).data
             elif _type== 'RAM':
-                  return None
+                  return RAMDetailSerializer(obj.ram).data
             elif _type== 'Hard_Drive':
                   return None
             elif _type== 'PSU':
                   return None
             elif _type== 'CASE_Cover':
-                  return None
+                  return CASE_CoverDetailSerializer(obj.case_cover).data
             elif _type== 'Radiator':
                   return RadiatorDetailSerializer(obj.radiator).data
             else:

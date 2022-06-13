@@ -7,7 +7,6 @@ def upload_to(instance, filename):
 
 class Manufacturer(models.Model):
       name_manufacturer= models.CharField(max_length=50)
-      src_img= models.TextField(blank=True,default='')
       def __str__(self) -> str:
             return self.name_manufacturer
 
@@ -152,6 +151,10 @@ class CPU(models.Model):
 
 class GPU(models.Model):
       name_gpu= models.CharField(unique=True,max_length=50)
+      manufacturer= models.ForeignKey(
+            Manufacturer,
+            on_delete=models.CASCADE,
+      )
       def __str__(self) -> str:
             return self.name_gpu
 
@@ -180,7 +183,7 @@ class VGA(models.Model):
       capacity= models.CharField(max_length=20,blank=True,null=True)
       oc_mode= models.CharField(max_length=255,blank=True,null=True)
       gaming_mode= models.CharField(max_length=255,blank=True,null=True)
-      microwave= models.CharField(max_length=20,blank=True,null=True)
+      memory_bus= models.CharField(max_length=20,blank=True,null=True)
       number_of_processing_units= models.IntegerField(blank=True,null=True)
       radiators= models.CharField(max_length=255,blank=True,null=True)
       def __str__(self) -> str:
@@ -203,7 +206,8 @@ class RAM(models.Model):
       capacity= models.CharField(max_length=20,blank=True,null=True)
       speed= models.IntegerField(blank=True,null=True)
       quantity_in_pack= models.IntegerField(blank=True,null=True)
-      rbg= models.BooleanField(blank=True,default=False,)
+      rbg= models.BooleanField(blank=True,default=False)
+      model= models.CharField(max_length=255,blank=True,null=True)
       def __str__(self) -> str:
             return self.name_ram
 
