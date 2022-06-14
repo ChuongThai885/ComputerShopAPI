@@ -251,12 +251,13 @@ class PSU(models.Model):
             primary_key=True
       )
       name_psu= models.CharField(max_length=255,unique=True)
-      psu_power= models.IntegerField(blank=True,null=True)
+      psu_wattage= models.CharField(max_length=50,blank=True,null=True)
       psu_performance= models.ForeignKey(
             PSU_Performance,
             on_delete=models.CASCADE,
             blank=True,null=True
       )
+      psu_input_power= models.CharField(max_length=50,blank=True,null=True)
       cooling_fan_size= models.CharField(max_length=255,blank=True,null=True)
       def __str__(self) -> str:
             return self.name_psu

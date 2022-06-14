@@ -218,7 +218,7 @@ class RAMDetailSerializer(RAMSerializer):
             )
 
 
-class Hard_DriveDetailSerializer(serializers.ModelSerializer):
+class Hard_DriveSerializer(serializers.ModelSerializer):
       connection_standard= serializers.SerializerMethodField(read_only=True)
 
       class Meta:
@@ -239,15 +239,16 @@ class Hard_DriveDetailSerializer(serializers.ModelSerializer):
                   return None
 
 
-class PSUDetailSerializer(serializers.ModelSerializer):
+class PSUSerializer(serializers.ModelSerializer):
       psu_performance= serializers.SerializerMethodField(read_only=True)
 
       class Meta:
             model= PSU
             fields =(
                   'name_psu',
-                  'psu_power',
+                  'psu_wattage',
                   'psu_performance',
+                  'psu_input_power',
                   'cooling_fan_size',
             )
       
@@ -385,9 +386,9 @@ class ProductSerializer(serializers.ModelSerializer):
             elif _type== 'RAM':
                   return RAMSerializer(obj.ram).data
             elif _type== 'Hard_Drive':
-                  return None
+                  return Hard_DriveSerializer(obj.hard_drive).data
             elif _type== 'PSU':
-                  return None
+                  return PSUSerializer(obj.psu).data
             elif _type== 'CASE_Cover':
                   return CASE_CoverSerializer(obj.case_cover).data
             elif _type== 'Radiator':
@@ -421,9 +422,9 @@ class ProductDetailSerializer(ProductSerializer):
             elif _type== 'RAM':
                   return RAMDetailSerializer(obj.ram).data
             elif _type== 'Hard_Drive':
-                  return None
+                  return Hard_DriveSerializer(obj.hard_drive).data
             elif _type== 'PSU':
-                  return None
+                  return PSUSerializer(obj.psu).data     
             elif _type== 'CASE_Cover':
                   return CASE_CoverDetailSerializer(obj.case_cover).data
             elif _type== 'Radiator':

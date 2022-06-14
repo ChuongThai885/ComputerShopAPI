@@ -49,3 +49,22 @@ class Orders_detail(models.Model):
                         fields=['orders', 'product'], name='unique_orders_productinfo_combination'
                   )
             ]
+
+
+class Cart(models.Model):
+      customer= models.ForeignKey(
+            Customer,
+            on_delete=models.CASCADE
+      )
+      product= models.ForeignKey(
+            Product,
+            on_delete=models.CASCADE
+      )
+      number_product= models.IntegerField(default=1)
+
+      class Meta:
+            constraints = [
+                  models.UniqueConstraint(
+                        fields=['customer', 'product'], name='unique_customer_product_combination'
+                  )
+            ]
