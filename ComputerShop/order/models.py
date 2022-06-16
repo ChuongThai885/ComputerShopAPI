@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from product.models import Product
 from user.models import Suplier, Customer
@@ -28,7 +29,7 @@ class Orders(models.Model):
             Payment,
             on_delete=models.CASCADE
       )
-      order_date= models.DateTimeField(blank=True,null=True)
+      order_date= models.DateTimeField(default=datetime.now,blank=True)
 
 
 class Orders_detail(models.Model):

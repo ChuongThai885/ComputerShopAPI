@@ -7,3 +7,4 @@ from order.models import *
 admin.site.register(Payment)
 admin.site.register(Orders)
 admin.site.register(Orders_detail)
+admin.site.register(Cart)
