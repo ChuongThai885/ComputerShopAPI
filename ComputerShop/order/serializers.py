@@ -108,13 +108,15 @@ class getOrderSerializer(serializers.ModelSerializer):
 class getOrderDetailSerializer(serializers.ModelSerializer):
       name_customer= serializers.SerializerMethodField(read_only=True)
       payment= serializers.SerializerMethodField(read_only=True)
-
+      list_product= serializers.SerializerMethodField(read_only=True)
+      
       class Meta:
             model= Orders
             fields =(
                   'name_customer',
                   'delivery_address',
                   'order_date',
+                  'list_product',
                   'total_prices',
                   'payment',
             )
@@ -127,6 +129,17 @@ class getOrderDetailSerializer(serializers.ModelSerializer):
                   return str(obj.customer.first_name)+" "+ str(obj.customer.last_name)
             except:
                   return None
+
+      def get_list_product(self, obj):
+            data= []
+            order_details= Orders_detail.objects.filter(orders_id= obj.id)
+            _dict= dict(order_details.values_list('product', 'number_product'))
+            for i in _dict:
+                  data_item= {}
+                  data_item['product'] = ProductSerializer(Product.objects.get(pk=i)).data
+                  data_item['number_product']= _dict.get(i)
+                  data.append(data_item)
+            return data
 
 
 class AddNewOrderSerializer(serializers.ModelSerializer):
