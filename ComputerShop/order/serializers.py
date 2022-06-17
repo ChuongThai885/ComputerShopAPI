@@ -160,6 +160,8 @@ class AddNewOrderSerializer(serializers.ModelSerializer):
             # Kiểm tra tên người nhận 
             if _customer.first_name=='' or _customer.last_name== '':
                   raise serializers.DjangoValidationError({'error':'Customer\'s name is required!'})
+            if _customer.phone_number== '':
+                  raise serializers.DjangoValidationError({'error':'Customer\'s phone number is required!'})
             # Kiểm tra địa chỉ nhận 
             if _delivery_address=='': 
                   if _customer.address== '':

@@ -1,14 +1,8 @@
 from rest_framework import serializers
 from user.models import Customer
 
-class getAllCustomersSerializer(serializers.ModelSerializer):
-
-      class Meta:
-            model = Customer 
-            fields= ('id','username','email')
 
 class RegistrationSerializers(serializers.ModelSerializer):
-
       password2= serializers.CharField(style={'input_type':'password'}, write_only=True)
 
       class Meta:
@@ -34,16 +28,17 @@ class RegistrationSerializers(serializers.ModelSerializer):
             
             return account
 
+
 class getUserInforSerializers(serializers.ModelSerializer):
+
       class Meta:
             model= Customer
             fields=(
                   'id',
-                  'username',
-                  'email',
-                  'is_superuser',
                   'first_name',
                   'last_name',
+                  'email',
+                  'is_superuser',
                   'address',
                   'phone_number'
             )
