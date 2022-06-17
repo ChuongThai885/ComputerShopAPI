@@ -177,11 +177,12 @@ class AddNewOrderSerializer(serializers.ModelSerializer):
                   print(products)
                   # Kiểm tra xem sp còn hàng không
                   for i in range( len(products)):
-                        if products[i].Available_Quantity== 0:
+                        if products[i].Available_Quantity- list_cart_items_amount.get( products[i].id) < 0:
                               raise serializers.DjangoValidationError({'error':'Some of products you order is out of range'})
                   # Giảm số lượng sp 
                   for i in range( len(products)):
                         products[i].Available_Quantity -= list_cart_items_amount.get( products[i].id)
+                        products[i].save()
                   # Tạo order 
                   _order = Orders(
                         customer= _customer, 
@@ -196,10 +197,10 @@ class AddNewOrderSerializer(serializers.ModelSerializer):
                               orders= _order,
                               product= p,
                               number_product= list_cart_items_amount.get(i),
-                              price= p.price
+                              price= p.price* list_cart_items_amount.get(i)
                         )
                         order_detail.save()
-                        _total_prices+= p.price
+                        _total_prices+= p.price*list_cart_items_amount.get(i)
                   # update giá tổng 
                   _order.total_prices= _total_prices
                   _order.save()
