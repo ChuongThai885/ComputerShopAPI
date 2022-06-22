@@ -378,7 +378,7 @@ class ProductSerializer(serializers.ModelSerializer):
       def get_detail_infor(self, obj):
             _type= obj.product_type.name_type
             if _type=='Mainboard':
-                  return MainboardDetailSerializer(obj.mainboard).data
+                  return MainboardSerializer(obj.mainboard).data
             elif _type== 'CPU':
                   return CPUSerializer(obj.cpu).data
             elif _type== 'VGA':

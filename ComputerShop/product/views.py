@@ -35,14 +35,25 @@ def getDetail(id_product):
             _status = status.HTTP_400_BAD_REQUEST
       return Response(data, _status)
 
+
 class getAllProductAPI(APIView):
       def get(self,request):
             return getAll("Product")
+
 
 class getAllAPI(APIView):
       def get(self,request, type):
             return getAll(type)
 
+
 class getProductDetailAPI(APIView):
       def get(self, request, id):
             return getDetail(id)
+
+
+class getProductTypeAPI(APIView):
+      def get(self, request):
+            data= {}
+            _list= Product_Type.objects.all()
+            list_name= list(_list.values_list('name_type',flat=True))
+            return Response(list_name,status.HTTP_200_OK)
